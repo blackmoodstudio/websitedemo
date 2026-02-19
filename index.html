@@ -1,0 +1,1043 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Black Mood Studio</title>
+  <meta name="description" content="Black Mood Studio — Recording • Mixing • Mastering" />
+  <meta name="color-scheme" content="dark light" />
+  <style>
+    :root{
+      --bg:#07070a;
+      --panel: rgba(10,10,14,.55);
+      --border: rgba(255,255,255,.14);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.70);
+      --rose: #fb7185;
+      --rose2:#e11d48;
+      --shadow: 0 18px 60px rgba(0,0,0,.55);
+      --radius: 18px;
+      --max: 1120px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background: var(--bg);
+      color: var(--text);
+      overflow-x:hidden;
+    }
+    a{color:inherit}
+    .container{max-width:var(--max); margin:0 auto; padding:0 16px}
+    .hidden{display:none !important}
+    .btn{
+      appearance:none; border:1px solid var(--border);
+      background: rgba(0,0,0,.35);
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 14px;
+      font-weight:700;
+      letter-spacing:.04em;
+      cursor:pointer;
+      transition: transform .2s ease, background .2s ease, border-color .2s ease, opacity .2s ease;
+    }
+    .btn:hover{background: rgba(0,0,0,.55); border-color: rgba(255,255,255,.22); transform: translateY(-1px)}
+    .btn.primary{
+      background: rgba(255,255,255,.92);
+      border-color: rgba(255,255,255,.92);
+      color:#09090b;
+    }
+    .btn.primary:hover{background: rgba(255,255,255,.85)}
+    .btn.rose{
+      background: rgba(225,29,72,.92);
+      border-color: rgba(225,29,72,.92);
+      color:white;
+    }
+    .btn.rose:hover{background: rgba(225,29,72,1)}
+    .glass{
+      background: linear-gradient(180deg, rgba(255,255,255,.10) 0%, rgba(255,255,255,.04) 100%);
+      border: 1px solid rgba(255,255,255,.14);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+    }
+    .hover-lift{transition:transform .22s ease, border-color .22s ease, background .22s ease}
+    .hover-lift:hover{transform: translateY(-2px); border-color: rgba(251,113,133,.35)}
+    /* Header */
+    header{
+      position:fixed; inset:0 0 auto 0; height:72px;
+      z-index:60;
+      transition: none;
+      background: transparent;
+    }
+    header.scrolled{background: transparent; backdrop-filter:none; -webkit-backdrop-filter:none; border-bottom: none;}
+    .header-row{height:72px; display:flex; align-items:center; justify-content:space-between}
+    .logo{display:flex; align-items:center; gap:12px; text-decoration:none}
+    .logo img{height:44px; width:auto; opacity:.92; transition: opacity .2s ease}
+    .logo:hover img{opacity:1}
+    nav.desktop{display:none; gap:28px}
+    nav.desktop a{
+      text-decoration:none; font-weight:800; font-size:12px;
+      letter-spacing:.14em; text-transform:uppercase;
+      color: rgba(255,255,255,.70);
+      position:relative; padding:8px 0;
+      transition: color .2s ease;
+    }
+    nav.desktop a:hover{color:white}
+    nav.desktop a::after{
+      content:""; position:absolute; left:0; bottom:3px;
+      height:2px; width:0;
+      background: rgba(251,113,133,.95);
+      transition: width .2s ease;
+    }
+    nav.desktop a:hover::after{width:100%}
+    .menu-btn{display:inline-flex; align-items:center; justify-content:center; width:44px; height:44px; border-radius:14px; border:1px solid transparent; background: transparent; color: white; cursor:pointer}
+    .menu-btn:hover{color: var(--rose)}
+    /* Mobile menu */
+    .mobile-overlay{
+      position:fixed; inset:0; z-index:55;
+      opacity:0; pointer-events:none;
+      transition: opacity .28s ease;
+    }
+    .mobile-overlay.open{opacity:1; pointer-events:auto}
+    .mobile-backdrop{position:absolute; inset:0; background: linear-gradient(90deg, transparent 0%, rgba(0,0,0,.65) 40%, rgba(0,0,0,.92) 100%)}
+    .mobile-panel{
+      position:absolute; top:0; right:0; height:100%;
+      width:min(320px, 82vw);
+      background: linear-gradient(180deg, rgba(225,29,72,.55) 0%, rgba(0,0,0,.90) 45%, rgba(0,0,0,.65) 100%);
+      border-left:1px solid rgba(255,255,255,.10);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      padding: 96px 18px 18px;
+      transform: translateX(100%);
+      transition: transform .28s ease;
+    }
+    .mobile-overlay.open .mobile-panel{transform: translateX(0)}
+    .mobile-panel a{
+      display:block; padding: 12px 14px; border-radius: 14px;
+      text-decoration:none;
+      color: rgba(255,255,255,.92);
+      font-weight:800; font-size:12px;
+      letter-spacing:.14em; text-transform:uppercase;
+      transition: background .2s ease;
+    }
+    .mobile-panel a:hover{background: rgba(255,255,255,.10)}
+    /* Sections */
+    section{position:relative}
+    .full{min-height:100vh; overflow:hidden}
+    .bg{
+      position:absolute; inset:0;
+      background-size: cover;
+      background-position:center;
+      transform: scale(1.02);
+    }
+    .vignette{
+      position:absolute; inset:0;
+      background: radial-gradient(60% 40% at 50% 20%, rgba(0,0,0,.18) 0%, rgba(0,0,0,.60) 72%);
+    }
+    .hero-vignette{
+      background: radial-gradient(60% 40% at 50% 20%, rgba(0,0,0,.15) 0%, rgba(0,0,0,.55) 70%);
+    }
+    .hero-grad{
+      position:absolute; inset:0;
+      background: linear-gradient(180deg, rgba(0,0,0,.30) 0%, transparent 45%, rgba(0,0,0,.70) 100%);
+    }
+    .hero-anim{
+      position:absolute; inset:0;
+      background: linear-gradient(135deg, rgba(136,19,55,.25) 0%, transparent 55%, rgba(0,0,0,.40) 100%);
+      animation: gradientShift 10s ease-in-out infinite alternate;
+    }
+    @keyframes gradientShift{from{opacity:.55} to{opacity:.85}}
+    .hero-content{
+      position:relative; z-index:2;
+      min-height:100vh;
+      display:flex;
+      align-items:flex-end;
+      padding: 0 0 40px;
+    }
+    .hero-row{width:100%}
+    .app-card{
+      max-width: 560px;
+      display:flex; gap:14px; align-items:center;
+      padding: 14px;
+      border-radius: 26px;
+    }
+    .app-icon{
+      width:64px; height:64px;
+      border-radius: 18px; overflow:hidden;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(0,0,0,.30);
+      box-shadow: 0 10px 40px rgba(251,113,133,.18);
+    }
+    .app-icon img{width:100%; height:100%; object-fit:cover}
+    .store-btn{
+      display:inline-flex; align-items:center; gap:8px;
+      height:40px; padding: 0 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(0,0,0,.35);
+      text-decoration:none;
+      color: white;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      font-size:12px;
+      transition: background .2s ease, border-color .2s ease, transform .2s ease;
+    }
+    .store-btn:hover{background: rgba(0,0,0,.55); border-color: rgba(255,255,255,.26); transform: translateY(-1px)}
+    .store-btn span{display:none}
+    .scroll-indicator{
+      position:absolute; left:50%; bottom:28px; transform: translateX(-50%);
+      z-index:2;
+      display:flex; flex-direction:column; align-items:center; gap:8px;
+      color: rgba(255,255,255,.55);
+      font-size:12px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+    }
+    .mouse{
+      width:26px; height:40px; border-radius:999px;
+      border:2px solid rgba(255,255,255,.26);
+      display:flex; justify-content:center; padding-top:8px;
+    }
+    .mouse-dot{
+      width:6px; height:12px; border-radius:999px; background: rgba(255,255,255,.55);
+      animation: bounce 1.2s ease-in-out infinite;
+    }
+    @keyframes bounce{0%,100%{transform: translateY(0)} 50%{transform: translateY(8px)}}
+
+    /* Side panel layout */
+    .panel-wrap{
+      position:relative; z-index:2;
+      min-height:100vh;
+      display:flex;
+      align-items:flex-end;
+    }
+    .panel{
+      width:100%;
+      border-radius: 0;
+      border-left:none;
+      border-right:none;
+      border-bottom:none;
+      padding: 18px 18px 22px;
+      background: rgba(10,10,14,.56);
+      border-top:1px solid rgba(255,255,255,.10);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+    .panel-inner{max-width: 520px; margin:0 auto}
+    .panel h2{margin:0 0 12px; font-size:30px; font-weight:700}
+    .panel p{margin:0 0 10px; color: var(--muted); line-height:1.55}
+    .panel .small{color: rgba(255,255,255,.62); font-size:14px}
+    .mobile-photo{
+      width:100%; height:176px;
+      border-radius: 16px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.10);
+      margin-bottom: 14px;
+    }
+    .mobile-photo img{width:100%; height:100%; object-fit:cover}
+    .features{display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top: 14px}
+    .feat{
+      padding: 12px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+    }
+    .feat .t{font-weight:900; font-size:12px}
+    .feat .d{font-size:11px; color: rgba(255,255,255,.62); margin-top:2px; line-height:1.25}
+
+    /* Services */
+    .service-grid{display:grid; grid-template-columns: 1fr; gap:10px; margin-top: 12px}
+    .service{
+      display:flex; gap:10px; align-items:flex-start;
+      padding: 12px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+    }
+    .badge{
+      width:34px; height:34px; border-radius: 12px;
+      background: rgba(225,29,72,.22);
+      display:flex; align-items:center; justify-content:center; flex-shrink:0;
+      border: 1px solid rgba(251,113,133,.18);
+    }
+    .service h3{margin:0; font-size:12px; font-weight:900}
+    .service .desc{margin:2px 0 0; font-size:11px; color: rgba(255,255,255,.62); line-height:1.25}
+
+    /* Rooms slider */
+    .rooms{
+      height: 100vh;
+      min-height: 600px;
+      background: #000;
+    }
+    .slide{
+      position:absolute; inset:0;
+      opacity:0; transform: scale(1.05);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .slide.active{opacity:1; transform: scale(1.00)}
+    .rooms .overlay{
+      position:absolute; inset:0;
+      background: linear-gradient(180deg, rgba(0,0,0,.28) 0%, transparent 45%, rgba(0,0,0,.70) 100%);
+    }
+    .rooms .label{
+      position:absolute; inset:0;
+      display:flex; align-items:center; justify-content:center;
+      pointer-events:none;
+      text-align:center;
+    }
+    .rooms .label h2{
+      margin:0;
+      font-size: clamp(64px, 15vw, 140px);
+      font-weight: 900;
+      color: rgba(255,255,255,.38);
+      line-height:.9;
+      letter-spacing:-.02em;
+    }
+    .rooms .label h2 span{display:block; color: rgba(251,113,133,.55)}
+    .rooms .caption{
+      position:absolute; left:18px; bottom: 96px;
+      text-transform:uppercase;
+      letter-spacing:.18em;
+    }
+    .rooms .caption .t{font-size:14px; color: rgba(255,255,255,.82)}
+    .rooms .caption .d{margin-top:6px; font-size:12px; color: rgba(255,255,255,.55); letter-spacing:.08em; text-transform:none}
+    .rooms .controls{
+      position:absolute; right:18px; bottom: 18px;
+      display:flex; align-items:center; gap:12px;
+    }
+    .round{
+      width:48px; height:48px;
+      border-radius: 16px;
+      border:1px solid rgba(255,255,255,.22);
+      background: rgba(0,0,0,.40);
+      color:white;
+      display:flex; align-items:center; justify-content:center;
+      cursor:pointer;
+      transition: background .2s ease, border-color .2s ease, transform .2s ease;
+    }
+    .round:hover{background: rgba(0,0,0,.62); border-color: rgba(255,255,255,.34); transform: translateY(-1px)}
+    .dots{display:flex; gap:8px}
+    .dot{
+      width:12px; height:12px; border-radius:999px;
+      border:1px solid rgba(255,255,255,.85);
+      background: transparent; opacity:.62;
+      cursor:pointer;
+      transition: transform .2s ease, opacity .2s ease, background .2s ease;
+    }
+    .dot.active{background: rgba(255,255,255,.90); opacity:1; transform: scale(1.1)}
+    .indicators{
+      position:absolute; right: 18px; top: 50%;
+      transform: translateY(-50%);
+      display:flex; flex-direction:column; gap:12px;
+    }
+    .indicators button{
+      background:none; border:none; cursor:pointer;
+      font-size:12px; font-weight:900;
+      letter-spacing:.18em; text-transform:uppercase;
+      color: rgba(255,255,255,.42);
+      text-align:left;
+      padding: 4px 0;
+      transition: color .2s ease;
+    }
+    .indicators button.active{color:white}
+    .indicators button:hover{color: rgba(255,255,255,.75)}
+
+    /* Work */
+    .work-list{display:flex; flex-direction:column; gap:12px}
+    .track{
+      border-radius: 16px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.25);
+    }
+    .track iframe{display:block; width:100%; height:80px; border:0; background:#000}
+    .track.placeholder{
+      display:flex; align-items:center; gap:12px;
+      padding: 12px;
+      text-decoration:none;
+      background: rgba(255,255,255,.06);
+      border-radius: 16px;
+      border:1px solid rgba(255,255,255,.10);
+    }
+    .cover{
+      width:64px; height:64px; border-radius: 14px;
+      overflow:hidden;
+      background: linear-gradient(135deg, rgba(251,113,133,.20), rgba(0,0,0,.65));
+      display:flex; align-items:center; justify-content:center;
+      flex-shrink:0;
+      position:relative;
+    }
+    .cover img{width:100%; height:100%; object-fit:cover}
+    .cover .overlay{position:absolute; inset:0; background: rgba(0,0,0,.40); opacity:0; display:flex; align-items:center; justify-content:center; transition: opacity .2s ease}
+    .track.placeholder:hover{border-color: rgba(251,113,133,.35); background: rgba(255,255,255,.08)}
+    .track.placeholder:hover .cover .overlay{opacity:1}
+    .tinfo{min-width:0}
+    .tinfo .name{font-weight:900; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+    .tinfo .artist{font-size:12px; color: rgba(255,255,255,.62); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px}
+    .tinfo .meta{display:flex; align-items:center; gap:6px; margin-top:4px; font-size:10px; color: rgba(255,255,255,.44)}
+    .work-note{
+      margin-bottom: 12px;
+      padding: 12px;
+      border-radius: 14px;
+      background: rgba(0,0,0,.55);
+      border: 1px solid rgba(255,255,255,.10);
+    }
+    .work-note p{margin:0 0 10px; font-size:12px; color: rgba(255,255,255,.70); line-height:1.35}
+
+    /* Contact */
+    footer{
+      background: #f5f5f5;
+      color: #0a0a0a;
+    }
+    footer .container{max-width: 860px}
+    .contact-grid{display:grid; grid-template-columns: 1fr; gap:10px; margin: 18px 0 22px}
+    .card{
+      display:flex; align-items:center; gap:12px;
+      padding: 14px;
+      border-radius: 16px;
+      background: white;
+      border:1px solid rgba(0,0,0,.10);
+      text-decoration:none;
+      transition: box-shadow .2s ease, transform .2s ease, border-color .2s ease;
+    }
+    .card:hover{transform: translateY(-1px); box-shadow: 0 12px 30px rgba(0,0,0,.10)}
+    .iconbox{
+      width:42px; height:42px; border-radius: 14px;
+      display:flex; align-items:center; justify-content:center;
+      background: rgba(225,29,72,.12);
+      color: rgba(225,29,72,.95);
+      flex-shrink:0;
+    }
+    .iconbox.green{background: rgba(22,163,74,.14); color: rgba(22,163,74,.95)}
+    .iconbox.gray{background: rgba(0,0,0,.06); color: rgba(0,0,0,.62)}
+    .card .k{font-size:11px; letter-spacing:.14em; text-transform:uppercase; color: rgba(0,0,0,.55); font-weight:900}
+    .card .v{font-size:15px; font-weight:800; margin-top:2px; color:#0a0a0a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+    .socials{display:flex; gap:10px; justify-content:center; flex-wrap:wrap}
+    .social{
+      display:flex; align-items:center; gap:10px;
+      padding: 12px 16px;
+      border-radius: 16px;
+      color: white;
+      text-decoration:none;
+      font-weight:900;
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+    .social:hover{transform: translateY(-1px); box-shadow: 0 14px 30px rgba(0,0,0,.18)}
+    .grad-ig{background: linear-gradient(90deg, #ec4899, #f59e0b, #a855f7)}
+    .grad-fb{background: linear-gradient(90deg, #2563eb, #60a5fa)}
+    .footer-bottom{margin-top: 28px; padding-top: 18px; border-top: 1px solid rgba(0,0,0,.10); display:flex; flex-direction:column; gap:10px; align-items:center; justify-content:space-between}
+    .footer-bottom a{color: rgba(0,0,0,.62); text-decoration:none}
+    .footer-bottom a:hover{color:#0a0a0a}
+
+    /* Cookie banner */
+    .cookie{
+      position:fixed; left:16px; right:16px; bottom:16px;
+      z-index:80;
+      animation: fadeUp .35s ease both;
+    }
+    @keyframes fadeUp{from{opacity:0; transform: translateY(10px)} to{opacity:1; transform: translateY(0)}}
+    .cookie .box{
+      max-width: 920px; margin: 0 auto;
+      padding: 14px;
+      border-radius: 20px;
+    }
+    .cookie h3{margin:0 0 6px; font-size:14px}
+    .cookie p{margin:0; font-size:13px; color: rgba(255,255,255,.72); line-height:1.35}
+    .cookie .row{display:flex; gap:12px; flex-direction:column}
+    .cookie .actions{display:flex; gap:10px}
+    .cookie .close{
+      position:absolute; top:10px; right:10px;
+      width:36px; height:36px; border-radius: 14px;
+      border:none; background: transparent;
+      color: rgba(255,255,255,.55);
+      cursor:pointer;
+      transition: color .2s ease, background .2s ease;
+    }
+    .cookie .close:hover{color:white; background: rgba(255,255,255,.06)}
+
+    /* Responsive */
+    @media (min-width: 640px){
+      .features{grid-template-columns: repeat(4, 1fr)}
+      .service-grid{grid-template-columns: 1fr 1fr}
+      .contact-grid{grid-template-columns: repeat(3, 1fr)}
+      .store-btn span{display:inline}
+    }
+    @media (min-width: 1024px){
+      nav.desktop{display:flex}
+      .menu-btn{display:none}
+      .panel-wrap{align-items:center}
+      .panel{
+        width: min(33.333%, 480px);
+        border-radius: var(--radius);
+        border:1px solid rgba(255,255,255,.14);
+        padding: 22px 22px 24px;
+        margin-left: 0;
+        background: rgba(10,10,14,.50);
+      }
+      .panel-inner{max-width:none}
+      .panel-wrap.right{justify-content:flex-end}
+      .panel-wrap.left{justify-content:flex-start}
+      .panel-wrap.left .panel{margin-left: 24px}
+      .panel-wrap.right .panel{margin-right: 24px}
+      .mobile-photo{display:none}
+      .features{grid-template-columns: 1fr 1fr}
+      .rooms .caption{left: 40px}
+      .rooms .controls{right: 40px; bottom: 40px}
+      .indicators{right: 40px}
+      .cookie .row{flex-direction:row; align-items:center}
+      .cookie .actions{margin-left:auto}
+      .footer-bottom{flex-direction:row}
+    }
+  
+    /* Lucide icons (offline) */
+    .lucide-icon{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+    .badge .lucide-icon{width:18px;height:18px}
+    .iconbox .lucide-icon{width:18px;height:18px}
+    .round .lucide-icon{width:22px;height:22px}
+
+    /* Hide scroll hint when cookie banner is open */
+    .cookie-open .scroll-indicator{display:none}
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header id="siteHeader">
+    <div class="container">
+      <div class="header-row">
+        <a class="logo" href="#home" data-scroll>
+          <img src="https://i.postimg.cc/3J6KFQ64/Logo-Black-Mood-white.png" alt="Black Mood Studio" />
+        </a>
+
+        <nav class="desktop" aria-label="Navigazione principale">
+          <a href="#about" data-scroll>Studio</a>
+          <a href="#services" data-scroll>Servizi</a>
+          <a href="#rooms" data-scroll>Sale</a>
+          <a href="#work" data-scroll>Lavori</a>
+          <a href="#contact" data-scroll>Contatti</a>
+        </nav>
+
+        <button class="menu-btn" id="openMenu" aria-label="Apri menu">
+          <svg class="lucide-icon" aria-hidden="true" viewBox="0 0 24 24"><use href="#icon-menu"></use></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-overlay" id="mobileOverlay" aria-hidden="true">
+    <div class="mobile-backdrop" id="mobileBackdrop"></div>
+    <div class="mobile-panel">
+      <a href="#about" data-scroll>Studio</a>
+      <a href="#services" data-scroll>Servizi</a>
+      <a href="#rooms" data-scroll>Sale</a>
+      <a href="#work" data-scroll>Lavori</a>
+      <a href="#contact" data-scroll>Contatti</a>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <section id="home" class="full">
+    <div class="bg" style="background-image:url('https://i.postimg.cc/1t1shRHb/24.jpg')"></div>
+    <div class="hero-grad"></div>
+    <div class="vignette hero-vignette"></div>
+    <div class="hero-anim"></div>
+
+    <div class="hero-content">
+      <div class="container hero-row">
+        <div class="glass app-card">
+          <div class="app-icon">
+            <img src="https://i.postimg.cc/522nFVvV/Logo_app.png" alt="Black Mood Studio App" />
+          </div>
+
+          <div style="flex:1; min-width:0">
+            <div style="font-size:12px; font-weight:900; letter-spacing:.18em; text-transform:uppercase; color:rgba(255,255,255,.75)">
+              Scarica l'app
+            </div>
+            <div style="font-size:16px; font-weight:800; margin-top:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis">
+              Black Mood Studio
+            </div>
+          </div>
+
+          <div style="display:flex; gap:10px">
+            <a class="store-btn" href="#" aria-label="App Store">
+              <svg class="lucide-icon" aria-hidden="true" viewBox="0 0 24 24"><use href="#icon-apple"></use></svg>
+              <span>App Store</span>
+            </a>
+            <a class="store-btn" href="#" aria-label="Google Play">
+              <svg class="lucide-icon" aria-hidden="true" viewBox="0 0 24 24"><use href="#icon-play"></use></svg>
+              <span>Play Store</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scroll-indicator">
+      
+      <div class="mouse"><div class="mouse-dot"></div></div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="full">
+    <div class="bg" style="background-image:url('https://i.postimg.cc/j55jTx30/22.jpg')"></div>
+    <div class="vignette"></div>
+
+    <div class="panel-wrap right">
+      <div class="panel glass">
+        <div class="panel-inner">
+          <div class="mobile-photo">
+            <img src="https://i.postimg.cc/j55jTx30/22.jpg" alt="Lo Studio" loading="lazy" />
+          </div>
+
+          <h2>Lo Studio</h2>
+          <p>
+            Progettato per lavorare con precisione e continuità, Black Mood Studio integra una live room per riprese e prove, una regia per produzione e overdub e una sala dedicata a mix e mastering.
+          </p>
+          <p class="small">
+            Il trattamento acustico con pannelli Vicoustic assicura decisioni affidabili, mentre la connessione tra le sale consente sessioni multitraccia in tempo reale.
+          </p>
+          <p class="small">
+            Produzione, registrazione, editing, mix e mastering con consegne pronte per lo streaming.
+          </p>
+
+          <div class="features" aria-label="Punti di forza">
+            <div class="feat hover-lift">
+              <div class="t">Live Room</div>
+              <div class="d">Riprese e prove in ambiente ottimizzato</div>
+            </div>
+            <div class="feat hover-lift">
+              <div class="t">Regia</div>
+              <div class="d">Produzione e overdub professionale</div>
+            </div>
+            <div class="feat hover-lift">
+              <div class="t">Mix &amp; Master</div>
+              <div class="d">Sala dedicata alla finalizzazione</div>
+            </div>
+            <div class="feat hover-lift">
+              <div class="t">Streaming Ready</div>
+              <div class="d">Consegne pronte per le piattaforme</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="services" class="full">
+    <div class="bg" style="background-image:url('https://i.postimg.cc/y6DzLCHh/26-B-Flip.jpg')"></div>
+    <div class="vignette"></div>
+
+    <div class="panel-wrap left">
+      <div class="panel glass">
+        <div class="panel-inner">
+          <div class="mobile-photo">
+            <img src="https://i.postimg.cc/y6DzLCHh/26-B-Flip.jpg" alt="Servizi" loading="lazy" />
+          </div>
+
+          <h2>Servizi</h2>
+
+          <div class="service-grid" aria-label="Elenco servizi">
+            <div class="service hover-lift"><div class="badge"><svg class="lucide-icon" aria-hidden="true" viewBox="0 0 24 24"><use href="#icon-settings"></use></svg></div><div><h3>Servizi Custom</h3><p class="desc">Soluzioni su misura per esigenze specifiche e progetti particolari.</p></div></div>
+            <div class="service hover-lift"><div class="badge"><svg class="lucide-icon" aria-hidden="true" viewBox="0 0 24 24"><use href="#icon-mic"></use></svg></div><div><h3>Registrazioni in Studio</h3><p class="desc">Sessioni di registrazione curate in un ambiente professionale.</p></div></div>
+            <div class="service hover-lift"><div class="badge"><svg class="lucide-icon" aria-hidden="true" viewBox="0 0 24 24"><use href="#icon-wand-sparkles"></use></svg></div><div><h3>Produzione &amp; Arrangiamento</h3><p class="desc">Supporto creativo e tecnico nello sviluppo dei brani.</p></div></div>
+            <div class="service hover-lift"><div class="badge"><svg class="lucide-icon" aria-hidden="true" viewBox="0 0 24 24"><use href="#icon-sliders-vertical"></use></svg></div><div><h3>Mix &amp; Master</h3><p class="desc">Finalizzazione audio mirata e coerente con il progetto.</p></div></div>
+            <div class="service hover-lift"><div class="badge"><svg class="lucide-icon" aria-hidden="true" viewBox="0 0 24 24"><use href="#icon-guitar"></use></svg></div><div><h3>IR per Chitarre e Bassi</h3><p class="desc">Impulse response personalizzati per chitarre e bassi.</p></div></div>
+            <div class="service hover-lift"><div class="badge"><svg class="lucide-icon" aria-hidden="true" viewBox="0 0 24 24"><use href="#icon-list-music"></use></svg></div><div><h3>Sequenze per Live</h3><p class="desc">Sequenze e click track per performance dal vivo.</p></div></div>
+            <div class="service hover-lift"><div class="badge"><svg class="lucide-icon" aria-hidden="true" viewBox="0 0 24 24"><use href="#icon-headphones"></use></svg></div><div><h3>Consulenza Tecnica</h3><p class="desc">Ascolto guidato e confronto tecnico sui progetti.</p></div></div>
+            <div class="service hover-lift"><div class="badge"><svg class="lucide-icon" aria-hidden="true" viewBox="0 0 24 24"><use href="#icon-radio"></use></svg></div><div><h3>Service Live</h3><p class="desc">Supporto audio tecnico per eventi e concerti.</p></div></div>
+          </div>
+          <!-- tasto "Richiedi preventivo" rimosso -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ROOMS -->
+  <section id="rooms" class="rooms">
+    <div class="slide active" data-slide="0"><img src="https://i.postimg.cc/pr70CnRX/IMG-6688.avif" alt="STUDIO I" style="width:100%;height:100%;object-fit:cover"/></div>
+    <div class="slide" data-slide="1"><img src="https://i.postimg.cc/gc6XZ5nV/Blackmood-59.jpg" alt="STUDIO M" style="width:100%;height:100%;object-fit:cover"/></div>
+    <div class="slide" data-slide="2"><img src="https://i.postimg.cc/YSWmLGy7/16.jpg" alt="STUDIO R" style="width:100%;height:100%;object-fit:cover"/></div>
+    <div class="overlay"></div>
+
+    <div class="label" aria-hidden="true"><h2 id="roomsBig">STUDIO <span>I</span></h2></div>
+
+    <div class="caption">
+      <div class="t" id="roomsTitle">STUDIO I</div>
+      <div class="d" id="roomsDesc">Sala mix &amp; mastering</div>
+    </div>
+
+    <div class="controls" aria-label="Controlli slider sale">
+      <button class="round" id="roomsPrev" aria-label="Slide precedente"><svg class="lucide-icon" aria-hidden="true" viewBox="0 0 24 24"><use href="#icon-chevron-left"></use></svg></button>
+      <div class="dots" id="roomsDots" aria-label="Indicatori slide">
+        <button class="dot active" data-dot="0" aria-label="Vai a slide 1"></button>
+        <button class="dot" data-dot="1" aria-label="Vai a slide 2"></button>
+        <button class="dot" data-dot="2" aria-label="Vai a slide 3"></button>
+      </div>
+      <button class="round" id="roomsNext" aria-label="Slide successiva"><svg class="lucide-icon" aria-hidden="true" viewBox="0 0 24 24"><use href="#icon-chevron-right"></use></svg></button>
+    </div>
+
+    <div class="indicators" aria-label="Selettore sale">
+      <button data-room="0" class="active">STUDIO I</button>
+      <button data-room="1">STUDIO M</button>
+      <button data-room="2">STUDIO R</button>
+    </div>
+  </section>
+
+  <!-- WORK -->
+  <section id="work" class="full">
+    <picture class="bg">
+      <source media="(max-width: 900px)" srcset="https://i.postimg.cc/NFmdMppp/Blackmood-91.jpg" />
+      <img src="https://i.postimg.cc/QMhTqtGW/Blackmood-89.jpg" alt="Lavori" style="width:100%;height:100%;object-fit:cover" />
+    </picture>
+    <div class="vignette"></div>
+
+    <div class="panel-wrap right">
+      <div class="panel glass" style="width:min(33.333%,420px)">
+        <div class="panel-inner" style="max-width:none">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+            <div style="width:26px;height:26px;border-radius:999px;background:rgba(251,113,133,.22);display:flex;align-items:center;justify-content:center"><svg class="lucide-icon" aria-hidden="true" viewBox="0 0 24 24"><use href="#icon-disc-3"></use></svg></div>
+            <h2 style="margin:0">Lavori</h2>
+          </div>
+
+          <div id="workCookieNote" class="work-note hidden">
+            <p>Per ascoltare le tracce, abilita i contenuti esterni (Spotify) dal banner cookie.</p>
+            <button class="btn rose" id="manageCookiesBtn">Gestisci cookie</button>
+          </div>
+
+          <div class="work-list" id="tracksList" aria-label="Tracce Spotify"></div>
+
+          <div style="margin-top:14px; text-align:center">
+            <a href="https://open.spotify.com" target="_blank" rel="noopener noreferrer" style="font-size:12px; color: rgba(255,255,255,.62); text-decoration:none">
+              Vedi tutti i lavori ↗
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <footer id="contact">
+    <div class="container" style="padding: 54px 16px 42px">
+      <h2 style="margin:0; text-align:center; font-size:34px; font-weight:900">Contatti</h2>
+      <p style="margin:10px 0 0; text-align:center; color: rgba(0,0,0,.62)">Prenotazioni, preventivi, collaborazioni</p>
+
+      <div class="contact-grid" style="margin-top:22px">
+        <a class="card" href="mailto:info@blackmoodstudio.com">
+          <div class="iconbox" aria-hidden="true"><svg class="lucide-icon" aria-hidden="true" viewBox="0 0 24 24"><use href="#icon-mail"></use></svg></div>
+          <div style="min-width:0"><div class="k">Email</div><div class="v">info@blackmoodstudio.com</div></div>
+        </a>
+
+        <a class="card" href="https://wa.me/393484871143" target="_blank" rel="noopener noreferrer">
+          <div class="iconbox green" aria-hidden="true"><svg class="lucide-icon" aria-hidden="true" viewBox="0 0 24 24"><use href="#icon-phone"></use></svg></div>
+          <div style="min-width:0"><div class="k">WhatsApp</div><div class="v">348 4871143</div></div>
+        </a>
+
+        <div class="card" style="cursor:default">
+          <div class="iconbox gray" aria-hidden="true"><svg class="lucide-icon" aria-hidden="true" viewBox="0 0 24 24"><use href="#icon-map-pin"></use></svg></div>
+          <div style="min-width:0"><div class="k">Indirizzo</div><div class="v">Via Nino Oxilia 4, Novara</div></div>
+        </div>
+      </div>
+
+      <div style="text-align:center; margin-top: 18px">
+        <div style="font-size:11px; letter-spacing:.14em; text-transform:uppercase; color: rgba(0,0,0,.55); font-weight:900; margin-bottom:10px">Social</div>
+        <div class="socials">
+          <a class="social grad-ig" href="https://www.instagram.com/blackmoodstudio?igsh=OGIyOXl4OGdtcXJ2&utm_source=qr" target="_blank" rel="noopener noreferrer">
+            <svg class="lucide-icon" aria-hidden="true" viewBox="0 0 24 24"><use href="#icon-instagram"></use></svg>
+            <div><div style="font-size:14px">@blackmoodstudio</div></div>
+          </a>
+          <a class="social grad-fb" href="https://www.facebook.com/share/17k13UUqeF/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer">
+            <svg class="lucide-icon" aria-hidden="true" viewBox="0 0 24 24"><use href="#icon-facebook"></use></svg>
+            <div><div style="font-size:14px">Black Mood Studio</div></div>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div style="font-size:13px; color: rgba(0,0,0,.62); font-weight:700; text-align:center">
+          © <span id="year"></span> Black Mood Studio — Recording • Mixing • Mastering
+        </div>
+        <div style="display:flex; gap:14px; flex-wrap:wrap; justify-content:center; align-items:center">
+          <a href="https://sites.google.com/view/privacy-blackmoodstudio/home-page" target="_blank" rel="noopener noreferrer" style="font-weight:700; font-size:13px">
+            Privacy &amp; Cookie Policy
+          </a>
+          <a href="#" id="cookiePrefsOpen" style="font-weight:700; font-size:13px">Preferenze cookie</a>
+        </div>
+      </div>
+        <a href="https://sites.google.com/view/privacy-blackmoodstudio/home-page" target="_blank" rel="noopener noreferrer" style="font-weight:700; font-size:13px">
+          Privacy &amp; Cookie Policy
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Cookie Banner -->
+  <div class="cookie hidden" id="cookieBanner" role="dialog" aria-live="polite" aria-label="Cookie banner">
+    <div class="box glass" style="position:relative">
+      <button class="close" id="cookieClose" aria-label="Chiudi">
+        <svg class="lucide-icon" aria-hidden="true" viewBox="0 0 24 24"><use href="#icon-x"></use></svg>
+      </button>
+
+      <div class="row">
+        <div style="display:flex; gap:12px; align-items:flex-start; flex:1">
+          <div style="width:44px;height:44px;border-radius:16px;background:rgba(251,113,133,.20);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg class="lucide-icon" aria-hidden="true" viewBox="0 0 24 24"><use href="#icon-cookie"></use></svg></div>
+          <div>
+            <h3>Cookie &amp; contenuti esterni</h3>
+            <p>
+              Usiamo strumenti necessari e, solo con consenso, contenuti esterni (es. Spotify) e font.
+              <a href="https://sites.google.com/view/privacy-blackmoodstudio/home-page" target="_blank" rel="noopener noreferrer" style="color:rgba(251,113,133,.95); text-decoration:underline">Leggi la policy</a>.
+            </p>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn" id="cookieReject">Rifiuta</button>
+          <button class="btn primary" id="cookieAccept">Accetta</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="icons.js"></script>
+  <script>
+    const qs = (s, el=document) => el.querySelector(s);
+    const qsa = (s, el=document) => Array.from(el.querySelectorAll(s));
+
+    // Smooth scroll
+    function smoothTo(hash){
+      const el = document.querySelector(hash);
+      if(!el) return;
+      el.scrollIntoView({behavior:'smooth'});
+    }
+    qsa('[data-scroll]').forEach(a=>{
+      a.addEventListener('click', (e)=>{
+        const href = a.getAttribute('href');
+        if(href && href.startsWith('#')){
+          e.preventDefault();
+          smoothTo(href);
+          closeMobileMenu();
+        }
+      });
+    });
+
+    // Header style on scroll disabled (keep header transparent)
+
+
+    // Mobile menu
+    const overlay = qs('#mobileOverlay');
+    const openBtn = qs('#openMenu');
+    const backdrop = qs('#mobileBackdrop');
+    function openMobileMenu(){
+      overlay.classList.add('open');
+      overlay.setAttribute('aria-hidden','false');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeMobileMenu(){
+      overlay.classList.remove('open');
+      overlay.setAttribute('aria-hidden','true');
+      document.body.style.overflow = '';
+    }
+    openBtn.addEventListener('click', openMobileMenu);
+    backdrop.addEventListener('click', closeMobileMenu);
+    document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMobileMenu(); });
+
+    // Cookie consent (single)
+    const CONSENT_KEY = 'bms_consent_v1';
+    const cookieBanner = qs('#cookieBanner');
+    const btnAccept = qs('#cookieAccept');
+    const btnReject = qs('#cookieReject');
+    const btnClose = qs('#cookieClose');
+    const manageCookiesBtn = qs('#manageCookiesBtn');
+    const workCookieNote = qs('#workCookieNote');
+
+    let consent = null;
+    let hasCheckedConsent = false;
+
+    function showBanner(){ cookieBanner.classList.remove('hidden'); document.body.classList.add('cookie-open'); }
+    function hideBanner(){ cookieBanner.classList.add('hidden'); document.body.classList.remove('cookie-open'); }
+
+    function saveConsent(obj){
+      consent = obj;
+      localStorage.setItem(CONSENT_KEY, JSON.stringify(obj));
+      hideBanner();
+      renderWork();
+    }
+    function acceptAll(){ saveConsent({necessary:true, experience:true}); }
+    function reject(){ saveConsent({necessary:true, experience:false}); }
+
+    function openCookieSettings(){ showBanner(); }
+    function closeBanner(){
+      if(consent || !hasCheckedConsent){
+        hideBanner();
+        return;
+      }
+      reject();
+    }
+    btnAccept.addEventListener('click', acceptAll);
+    btnReject.addEventListener('click', reject);
+    btnClose.addEventListener('click', closeBanner);
+    manageCookiesBtn.addEventListener('click', openCookieSettings);
+
+    
+    const cookiePrefsOpen = qs('#cookiePrefsOpen');
+    if(cookiePrefsOpen){ cookiePrefsOpen.addEventListener('click', (e)=>{ e.preventDefault(); openCookieSettings(); }); }
+(function initConsent(){
+      const stored = localStorage.getItem(CONSENT_KEY);
+      if(stored){
+        try{
+          consent = JSON.parse(stored);
+          hideBanner();
+        }catch(e){
+          consent = null;
+          showBanner();
+        }
+      }else{
+        showBanner();
+      }
+      hasCheckedConsent = true;
+      renderWork();
+    })();
+
+    // Rooms slider
+    try{
+      const rooms = [
+        { title: 'STUDIO I', bigA:'STUDIO', bigB:'I', desc:'Sala mix & mastering' },
+        { title: 'STUDIO M', bigA:'STUDIO', bigB:'M', desc:'Regia per produzione e overdub' },
+        { title: 'STUDIO R', bigA:'STUDIO', bigB:'R', desc:'Live room per riprese e prove' },
+      ];
+      const slides = qsa('.slide');
+      const dots = qsa('#roomsDots .dot');
+      const indBtns = qsa('.indicators button');
+      const big = qs('#roomsBig');
+      const capT = qs('#roomsTitle');
+      const capD = qs('#roomsDesc');
+      const prevBtn = qs('#roomsPrev');
+      const nextBtn = qs('#roomsNext');
+
+      if(slides.length && big && capT && capD && prevBtn && nextBtn){
+        let idx = 0;
+        let timer = null;
+
+        function setRooms(i){
+          idx = (i + rooms.length) % rooms.length;
+          slides.forEach((s, n)=> s.classList.toggle('active', n===idx));
+          dots.forEach((d, n)=> d.classList.toggle('active', n===idx));
+          indBtns.forEach((b, n)=> b.classList.toggle('active', n===idx));
+          const r = rooms[idx];
+          big.innerHTML = `${r.bigA} <span>${r.bigB}</span>`;
+          capT.textContent = r.title;
+          capD.textContent = r.desc;
+        }
+        function startAuto(){
+          stopAuto();
+          timer = setInterval(()=> setRooms(idx+1), 5200);
+        }
+        function stopAuto(){
+          if(timer){ clearInterval(timer); timer=null; }
+        }
+
+        prevBtn.addEventListener('click', ()=>{ setRooms(idx-1); startAuto(); });
+        nextBtn.addEventListener('click', ()=>{ setRooms(idx+1); startAuto(); });
+        dots.forEach(d => d.addEventListener('click', ()=>{ setRooms(parseInt(d.dataset.dot,10)); startAuto(); }));
+        indBtns.forEach(b => b.addEventListener('click', ()=>{ setRooms(parseInt(b.dataset.room,10)); startAuto(); }));
+
+        setRooms(0);
+        startAuto();
+      }
+    }catch(e){
+      console.warn('Rooms slider disabled:', e);
+    } });
+    qs('#roomsNext').addEventListener('click', ()=>{ setRooms(idx+1); startAuto(); });
+    dots.forEach(d => d.addEventListener('click', ()=>{ setRooms(parseInt(d.dataset.dot,10)); startAuto(); }));
+    indBtns.forEach(b => b.addEventListener('click', ()=>{ setRooms(parseInt(b.dataset.room,10)); startAuto(); }));
+    setRooms(0);
+    startAuto();
+
+    // Work / Spotify (covers + link + embed)
+    const tracks = [
+      { id:'t1', spotifyUrl:'https://open.spotify.com/track/1ewFWzfcIjAx4G36WbDgX1', embedUrl:'https://open.spotify.com/embed/track/1ewFWzfcIjAx4G36WbDgX1?theme=0' },
+      { id:'t2', spotifyUrl:'https://open.spotify.com/track/423yAZqzAQvHCidKPiBhkE', embedUrl:'https://open.spotify.com/embed/track/423yAZqzAQvHCidKPiBhkE?theme=0' },
+      { id:'t3', spotifyUrl:'https://open.spotify.com/track/2j9His3b2NM30omK6OkzdK', embedUrl:'https://open.spotify.com/embed/track/2j9His3b2NM30omK6OkzdK?theme=0' },
+    ];
+    const tracksList = qs('#tracksList');
+
+    async function fetchOembed(url){
+      try{
+        const res = await fetch(`https://open.spotify.com/oembed?url=${encodeURIComponent(url)}`, { cache: 'no-store' });
+        if(!res.ok) return null;
+        return await res.json();
+      }catch(e){ return null; }
+    }
+
+    function workCard({title, artist, cover, spotifyUrl, embedUrl, showEmbed}){
+      const card = document.createElement('div');
+      card.className = 'work-card';
+
+      const coverHtml = cover
+        ? `<img src="${cover}" alt="${title}" loading="lazy" />`
+        : `<div class="ph">♪</div>`;
+
+      card.innerHTML = `
+        <div class="work-row">
+          <div class="cover">${coverHtml}</div>
+          <div class="winfo">
+            <div class="name">${title}</div>
+            <div class="artist">${artist}</div>
+            <div class="wmeta">
+              <a href="${spotifyUrl}" target="_blank" rel="noopener noreferrer">Apri su Spotify ↗</a>
+            </div>
+          </div>
+        </div>
+        ${showEmbed ? `<div class="embed"><iframe src="${embedUrl}" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="${title} - Spotify"></iframe></div>` : ``}
+      `;
+      return card;
+    }
+
+    function renderWork(){
+      const experienceConsent = !!(consent && consent.experience);
+      workCookieNote.classList.toggle('hidden', experienceConsent);
+      tracksList.innerHTML = '';
+
+      if(!experienceConsent){
+        tracks.forEach((t, i)=>{
+          tracksList.appendChild(workCard({
+            title: `Track ${i+1}`,
+            artist: 'Spotify',
+            cover: '',
+            spotifyUrl: t.spotifyUrl,
+            embedUrl: t.embedUrl,
+            showEmbed: false
+          }));
+        });
+        return;
+      }
+
+      (async ()=>{
+        const metas = await Promise.all(tracks.map(t => fetchOembed(t.spotifyUrl)));
+        tracks.forEach((t, i)=>{
+          const m = metas[i] || {};
+          const title = m.title || `Track ${i+1}`;
+          const artist = m.author_name || 'Spotify';
+          const cover = m.thumbnail_url || '';
+          tracksList.appendChild(workCard({
+            title, artist, cover,
+            spotifyUrl: t.spotifyUrl,
+            embedUrl: t.embedUrl,
+            showEmbed: true
+          }));
+        });
+      })();
+    }
+
+    // Year in footer
+    qs('#year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
