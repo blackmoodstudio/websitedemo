@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Black Mood Studio</title>
   <meta name="description" content="Black Mood Studio" />
-  <meta name="title" content="Black Mood Studio" />
+  <meta name="theme-color" content="#0a0a0a" />
 
   <!-- Social preview / miniatura condivisione -->
   <meta property="og:type" content="website" />
@@ -23,43 +23,40 @@
   <!-- Icone sito -->
   <link rel="icon" href="https://i.postimg.cc/JhbLGYnM/Black-Mood-frame-1400x1400-bg-white.png" />
   <link rel="apple-touch-icon" href="https://i.postimg.cc/JhbLGYnM/Black-Mood-frame-1400x1400-bg-white.png" />
-  <meta name="theme-color" content="#0a0a0a" />
 
-  <!-- Font caricati SOLO dopo consenso (Esperienza) per evitare chiamate esterne by-default -->
+  <!-- Font caricati SOLO dopo consenso (Esperienza) -->
 
   <style>
     :root{
       --container:1200px;
       --header-h:72px;
       --logo-h:56px;
-
       --bg:#0a0a0a;
       --txt:#f3f3f3;
       --muted:#d7d7d7;
       --stroke:rgba(255,255,255,.18);
-
       --panel-w:min(33.333%, 560px);
       --panel-bg:linear-gradient(180deg, rgba(225,29,72,.35) 0%, rgba(0,0,0,.62) 100%);
-      --brand-font:Inter, system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial, sans-serif;
-      --brand-font-2:Inter, system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial, sans-serif;
+      --font:Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, sans-serif;
+      --font2:Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, sans-serif;
     }
 
-    /* Se l'utente acconsente ai font esterni, questi due stack verranno "upgradati" in runtime via <link> */
-
     *{box-sizing:border-box}
-    html,body{height:100%; width:100%; overflow-x:hidden}
-    body{margin:0; font-family:var(--brand-font); background:var(--bg); color:var(--txt); overflow-x:hidden}
+    html{scroll-behavior:smooth; scroll-padding-top:var(--header-h)}
+    html,body{height:100%; width:100%}
+    body{margin:0; font-family:var(--font); background:var(--bg); color:var(--txt); overflow-x:hidden}
     a{color:inherit; text-decoration:none; overflow-wrap:anywhere; word-break:break-word}
     img{max-width:100%; display:block}
-    .container{max-width:var(--container); margin-inline:auto; padding:0 clamp(16px, 2vw, 24px)}
+
+    .container{max-width:var(--container); margin:0 auto; padding:0 clamp(16px,2vw,24px)}
+    section{margin:0; padding:0; scroll-margin-top:calc(var(--header-h) + 10px)}
 
     /* Header */
-    header{position:fixed; inset:0 0 auto 0; height:var(--header-h); z-index:50; background:transparent; border-bottom:none}
-    header .container.nav{max-width:none; margin-inline:0; padding-inline:12px}
-
+    header{position:fixed; inset:0 0 auto 0; height:var(--header-h); z-index:50; background:transparent}
     .nav{display:grid; grid-template-columns:auto 1fr auto; align-items:center; height:100%}
-    .brand{display:flex; align-items:center}
-    .brand .logo-img{height:var(--logo-h); width:auto; opacity:.8; transition:opacity .2s ease}
+
+    .brand{display:flex; align-items:center; justify-self:start}
+    .logo-img{height:var(--logo-h); width:auto; opacity:.85; transition:opacity .2s ease}
     .brand:hover .logo-img{opacity:1}
 
     nav[aria-label="Sezioni"]{display:flex; align-items:center; justify-content:center; padding-inline:28px}
@@ -67,170 +64,187 @@
     nav[aria-label="Sezioni"] a{font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.08em; font-size:13px}
     nav[aria-label="Sezioni"] a:hover{color:var(--txt)}
 
-    /* hamburger hidden on desktop */
-    .hamburger{display:none; background:none; border:0; width:42px; height:42px; padding:0}
+    .hamburger{display:none; background:none; border:0; width:42px; height:42px; padding:0; justify-self:end; cursor:pointer}
+    .hamburger svg{width:24px; height:24px; fill:#fff}
+
+    @media (max-width:1100px){
+      nav[aria-label="Sezioni"]{display:none}
+      .hamburger{display:grid; place-items:center}
+      :root{--logo-h:50px}
+    }
+
+    /* Menu drawer (tablet+phone): look originale (gradiente + pannello 1/4 schermo) */
+    @media (max-width:1100px){
+      :root{
+        --mnav-overlay:linear-gradient(270deg,
+          rgba(0,0,0,.78) 0%,
+          rgba(0,0,0,.55) 14%,
+          rgba(0,0,0,.28) 32%,
+          rgba(0,0,0,0) 50%,
+          rgba(0,0,0,0) 100%
+        );
+        --mnav-panel-bg:linear-gradient(180deg, rgba(225,29,72,.62) 0%, rgba(0,0,0,.80) 55%, rgba(0,0,0,.42) 100%);
+        --mnav-panel-w:25vw;
+        --mnav-panel-pad:18px 12px;
+      }
+      .mnav .panel{min-width:140px; max-width:240px; border-left:1px solid rgba(255,255,255,.14)}
+    }
+
+    /* Desktop: mai mostrare il drawer */
+    @media (min-width:1101px){
+      .hamburger{display:none !important}
+      #mobile-nav{display:none !important}
+      nav[aria-label="Sezioni"]{display:flex !important}
+    }
 
     /* Mobile drawer */
-    .mnav{position:fixed; inset:0; z-index:10050; display:grid; justify-items:end; align-items:stretch; background:rgba(0,0,0,.5)}
+    .mnav{position:fixed; inset:0; z-index:10050; display:grid; justify-items:end; align-items:stretch; background:var(--mnav-overlay, rgba(0,0,0,.5))}
     .mnav[hidden]{display:none}
-    .mnav .panel{width:min(92vw,420px); max-width:100%; height:100vh; background:#0f0f10; border-left:1px solid var(--stroke);
-      padding:16px; display:grid; grid-template-rows:auto 1fr; gap:10px}
+    .mnav .panel{width:var(--mnav-panel-w, min(92vw,420px)); height:100svh; background:var(--mnav-panel-bg, #0f0f10); border-left:1px solid var(--stroke);
+      padding:var(--mnav-panel-pad, 16px); display:grid; gap:12px}
     .mnav nav ul{display:grid; gap:12px; list-style:none; padding:0; margin:0}
-    .mnav nav a{font-weight:600}
+    .mnav nav a{font-weight:600; color:#fff; text-transform:uppercase; letter-spacing:.12em; font-size:12px; opacity:.92}
+    .mnav nav a:hover{opacity:1}
 
-    /* Sections */
-    html{scroll-padding-top:var(--header-h)}
-    section{padding:0; margin:0; scroll-margin-top:calc(var(--header-h) + 10px)}
-
+    /* Sections base */
     .static{position:relative; overflow:hidden}
-    .static .media{position:absolute; inset:0; background:#000; z-index:0}
-    .static .media img{position:absolute; inset:0; width:100%; height:100%; object-position:center}
+    .media{position:absolute; inset:0; background:#000; z-index:0}
+    .media img{position:absolute; inset:0; width:100%; height:100%; object-position:center; object-fit:cover}
+    .fit-contain .media img{object-fit:contain}
 
-    /* vignette */
     .vignette .media::after{content:""; position:absolute; inset:0; pointer-events:none;
       background:radial-gradient(60% 40% at 50% 20%, rgba(0,0,0,.18) 0%, rgba(0,0,0,.6) 72%);
     }
+    .hero .media::after{content:""; position:absolute; inset:0; pointer-events:none;
+      background:radial-gradient(60% 40% at 50% 20%, rgba(0,0,0,.15) 0%, rgba(0,0,0,.55) 70%);
+    }
 
-    /* sizes */
     .h-hero{height:100svh; min-height:520px}
     .h-tall{height:120svh; min-height:520px}
 
-    /* fit types */
-    .fit-cover .media img{object-fit:cover}
-    .fit-contain .media img{object-fit:contain}
-
-    /* side panel */
+    /* Side panel */
     .panel{position:absolute; top:0; height:100%; width:var(--panel-w); background:var(--panel-bg);
-      display:flex; align-items:center; justify-content:center; z-index:2
-    }
+      display:flex; align-items:center; justify-content:center; z-index:2}
     .panel.right{right:0}
     .panel.left{left:0}
     .panel .inner{width:100%; padding:28px; color:#fff}
-    .panel h3{margin:0 0 10px; font-family:var(--brand-font-2); font-weight:500; font-size:clamp(18px,2.6vw,28px)}
+    .panel h3{margin:0 0 10px; font-family:var(--font2); font-weight:500; font-size:clamp(18px,2.6vw,28px)}
     .panel p{margin:0 0 10px; color:#e9e9e9; font-size:clamp(14px,1.8vw,16px); line-height:1.45}
 
-    /* Hero */
-    .hero .media{background:#000}
-    .hero .media img{object-fit:cover}
-    .hero .media::after{content:""; position:absolute; inset:0; pointer-events:none;
-      background:radial-gradient(60% 40% at 50% 20%, rgba(0,0,0,.15) 0%, rgba(0,0,0,.55) 70%);
+    /* Home app banner */
+    .app-banner{position:absolute; left:24px; bottom:16px; bottom:calc(16px + env(safe-area-inset-bottom)); z-index:3;
+      width:min(520px, calc(100% - 48px)); display:flex; align-items:center; gap:12px; padding:12px 14px;
+      border-radius:18px; border:1px solid rgba(255,255,255,.16); background:var(--panel-bg);
+      box-shadow:0 18px 60px rgba(0,0,0,.45); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px)}
+    .app-badge{width:54px; height:54px; flex:0 0 54px; border-radius:16px; overflow:hidden;
+      border:1px solid rgba(255,255,255,.14); background:rgba(0,0,0,.25); display:grid; place-items:center}
+    .app-badge img{width:100%; height:100%; object-fit:cover}
+    .app-copy{min-width:0; flex:1}
+    .app-kicker{margin:0 0 4px; font-family:var(--font2); font-weight:600; letter-spacing:.12em; text-transform:uppercase;
+      font-size:11px; color:rgba(255,255,255,.92); white-space:nowrap}
+    .app-title{margin:0; font-size:13px; line-height:1.2; color:rgba(255,255,255,.92); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+    .store-actions{display:flex; gap:10px}
+    .store-btn{height:36px; padding:0 12px; border-radius:14px; border:1px solid rgba(255,255,255,.18);
+      background:rgba(0,0,0,.30); color:#fff; display:inline-flex; align-items:center; gap:8px; font-size:11px;
+      letter-spacing:.12em; text-transform:uppercase; cursor:pointer; transition:transform .15s ease, background .15s ease, border-color .15s ease; white-space:nowrap}
+    .store-btn:hover{transform:translateY(-1px); background:rgba(0,0,0,.42); border-color:rgba(255,255,255,.28)}
+    .store-btn svg{width:15px; height:15px; opacity:.95; display:block}
+
+    @media (max-width:1100px){
+      .app-banner{left:16px; right:16px; width:auto}
     }
 
     /* Studio short/long */
     .studio-short{display:none}
 
     /* Services list */
-    .service-list{list-style:none; margin:10px 0 0; padding:0}
-    .service-list li{margin:0 0 10px; break-inside:avoid}
+    .service-list{margin:10px 0 0; padding:0; list-style:decimal}
+    .service-list li{margin:0 0 10px}
     .service-list li:last-child{margin-bottom:0}
-    .service-list h4{margin:0 0 4px; font-family:var(--brand-font-2); font-weight:600; font-size:clamp(12px,1.4vw,14px); letter-spacing:.06em; text-transform:uppercase}
+    .service-list h4{margin:0 0 4px; font-family:var(--font2); font-weight:600; font-size:clamp(12px,1.4vw,14px); letter-spacing:.06em; text-transform:uppercase}
     .service-list p{margin:0; line-height:1.28; font-size:clamp(13px,1.35vw,14px); color:#ececec}
     #services .panel .inner{padding:26px}
     #services .panel h3{margin-bottom:8px}
     @media (min-width:1100px){
       #services .service-list{columns:2; column-gap:18px}
-      #services .service-list li{margin-bottom:12px}
+      #services .service-list li{break-inside:avoid}
     }
 
     /* Rooms carousel */
     .rooms{position:relative; height:100svh; min-height:520px; overflow:hidden; background:#000}
     .slides{position:absolute; inset:0; margin:0; padding:0}
-    .slide{position:absolute; inset:0; margin:0; padding:0; opacity:0; visibility:hidden; transition:opacity .6s ease}
+    .slide{position:absolute; inset:0; margin:0; opacity:0; visibility:hidden; transition:opacity .6s ease}
     .slide.is-active{opacity:1; visibility:visible}
     .slide img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center}
 
     .biglabel{position:absolute; inset:auto 0 18% 0; text-align:center; z-index:2; pointer-events:none}
-    .biglabel span{display:inline-block; font-family:var(--brand-font-2); font-weight:700; letter-spacing:.04em; text-transform:uppercase; font-size:clamp(120px,18vw,360px); line-height:.9; color:#fff; opacity:.4}
-    .biglabel.is-black span{color:#111; opacity:.55}
+    .biglabel > span{display:inline-block; font-family:var(--font2); font-weight:700; letter-spacing:.04em; text-transform:uppercase;
+      font-size:clamp(120px,18vw,360px); line-height:.9; color:#fff; opacity:.45}
     .biglabel .last{display:block}
 
     .caption{position:absolute; left:24px; bottom:18px; z-index:3; font-size:14px; letter-spacing:.12em; text-transform:uppercase; color:#e9e9e9}
     .controls{position:absolute; inset:auto 24px 18px auto; display:flex; align-items:center; gap:10px; z-index:3}
-    .btn{width:42px; height:42px; border-radius:12px; border:1px solid var(--stroke); background:rgba(0,0,0,.45); color:#fff}
+    .btn{width:42px; height:42px; border-radius:12px; border:1px solid var(--stroke); background:rgba(0,0,0,.45); color:#fff; cursor:pointer}
     .dots{display:flex; gap:8px}
-    .dot{width:8px; height:8px; border-radius:999px; border:1px solid #fff; opacity:.6; background:transparent}
+    .dot{width:8px; height:8px; border-radius:999px; border:1px solid #fff; opacity:.6; background:transparent; cursor:pointer}
     .dot.is-active{opacity:1; background:#fff}
 
     /* Work */
     #work{padding-top:0; padding-bottom:0}
-    .work .panel{align-items:flex-start; justify-content:center}
-
+    .work .panel{align-items:flex-start}
     .work-list{display:grid; gap:18px; width:100%; justify-items:end; align-content:start}
-    .work-item{border:0; background:transparent; overflow:visible}
+    .work-item{border:0; background:transparent}
 
-    /* Default: mostra SOLO copertine (niente chiamate esterne). Su desktop, gli iframe si attivano solo con consenso. */
     .work-iframe{display:none; width:100%; height:152px; border:0}
-    .work-cover{
-      display:block;
-      width:110px;
-      height:110px;
-      aspect-ratio:1/1;
-      border-radius:14px;
+    .work-cover{display:block; width:110px; height:110px; aspect-ratio:1/1; border-radius:14px;
       border:1px solid rgba(255,255,255,.16);
       background:linear-gradient(180deg, rgba(225,29,72,.18), rgba(0,0,0,.55));
-      background-size:cover;
-      background-position:center;
-      background-repeat:no-repeat;
-      padding:0;
-      cursor:pointer;
-    }
-    .work-cover .play{display:none}
+      background-size:cover; background-position:center; background-repeat:no-repeat;
+      padding:0; cursor:pointer}
 
-    /* Desktop: con consenso "Esperienza" -> mostra iframe, nascondi cover */
     @media (min-width:1101px){
       body.consent-experience #work .work-cover{display:none}
       body.consent-experience #work .work-iframe{display:block}
     }
 
-    /* Tablet & Smartphone: copertine piccole a destra, quadrate, senza scritte */
     @media (max-width:1100px){
-      #work .work-cover{width:86px; height:86px; border-radius:14px}
+      #work .work-cover{width:86px; height:86px}
       #work .work-iframe{display:none !important}
     }
 
     /* Footer */
     footer{padding:42px 0 36px; background:#f3f3f3; color:rgba(0,0,0,.85)}
     footer a{color:inherit}
-    footer strong{color:inherit}
     .footer-grid{display:grid; grid-template-columns:2fr 1fr; gap:24px}
     .tiny{font-size:13px; color:rgba(0,0,0,.85)}
 
     .contact-link{display:inline-flex; align-items:center; gap:10px; font-weight:400; color:rgba(0,0,0,.85); max-width:100%; flex-wrap:wrap}
-    .icon{width:18px; height:18px; flex:0 0 18px; opacity:1; color:rgba(0,0,0,.85)}
+    .icon{width:18px; height:18px; flex:0 0 18px; color:rgba(0,0,0,.85)}
     .icon.lg{width:20px; height:20px; flex-basis:20px}
 
     .social-list{display:grid; gap:12px; margin-top:10px}
     .social-item a{display:inline-flex; align-items:center; gap:10px; padding:8px 10px; border:1px solid rgba(0,0,0,.12);
       border-radius:14px; background:rgba(0,0,0,.03); color:rgba(0,0,0,.85);
-      transition:background .2s ease, border-color .2s ease, transform .2s ease; max-width:100%; min-width:0
-    }
+      transition:background .2s ease, border-color .2s ease, transform .2s ease; max-width:100%; min-width:0}
     .social-item a:hover{transform:translateY(-1px); border-color:rgba(0,0,0,.18); background:rgba(0,0,0,.06)}
     .social-handle,.social-platform{font-weight:400; color:rgba(0,0,0,.85)}
     .social-platform{font-size:12px; letter-spacing:.08em; text-transform:uppercase; opacity:.9}
 
-    /* Social palettes */
     .social-item a.ig{border-color:rgba(225,48,108,.35); background:linear-gradient(135deg, rgba(225,48,108,.28), rgba(255,220,128,.20), rgba(129,52,175,.22))}
-    .social-item a.ig:hover{border-color:rgba(225,48,108,.55); background:linear-gradient(135deg, rgba(225,48,108,.34), rgba(255,220,128,.26), rgba(129,52,175,.28))}
     .social-item a.fb{border-color:rgba(24,119,242,.35); background:linear-gradient(135deg, rgba(24,119,242,.26), rgba(24,119,242,.14))}
-    .social-item a.fb:hover{border-color:rgba(24,119,242,.55); background:linear-gradient(135deg, rgba(24,119,242,.32), rgba(24,119,242,.18))}
     .contact-link.wa{padding:8px 10px; border-radius:14px; border:1px solid rgba(37,211,102,.40);
-      background:linear-gradient(135deg, rgba(37,211,102,.26), rgba(37,211,102,.14)); color:rgba(0,0,0,.85)}
-    .contact-link.wa:hover{border-color:rgba(37,211,102,.60); background:linear-gradient(135deg, rgba(37,211,102,.32), rgba(37,211,102,.18))}
+      background:linear-gradient(135deg, rgba(37,211,102,.26), rgba(37,211,102,.14))}
 
     .footer-links{display:flex; gap:14px; flex-wrap:wrap; align-items:center; margin-top:10px}
-    .footer-links a, .footer-links button{font:inherit; color:rgba(0,0,0,.85); background:none; border:0; padding:0; cursor:pointer; text-decoration:underline}
-
-    footer::after{content:""; display:block; height:36px}
+    .footer-links a,.footer-links button{font:inherit; color:rgba(0,0,0,.85); background:none; border:0; padding:0; cursor:pointer; text-decoration:underline}
 
     /* Cookie banner */
     .cookie-banner{position:fixed; left:16px; right:16px; bottom:16px; z-index:9999}
     .cookie-card{max-width:980px; margin:0 auto; border-radius:18px; border:1px solid rgba(255,255,255,.14);
       background:linear-gradient(180deg, rgba(225,29,72,.40) 0%, rgba(0,0,0,.82) 100%);
-      box-shadow:0 18px 60px rgba(0,0,0,.45);
-      padding:14px 14px 12px; color:#fff
-    }
+      box-shadow:0 18px 60px rgba(0,0,0,.45); padding:14px 14px 12px; color:#fff}
     .cookie-row{display:flex; gap:12px; justify-content:space-between; align-items:center; flex-wrap:wrap}
-    .cookie-title{font-family:var(--brand-font-2); font-weight:600; letter-spacing:.08em; text-transform:uppercase; font-size:12px; opacity:.95}
+    .cookie-title{font-family:var(--font2); font-weight:600; letter-spacing:.08em; text-transform:uppercase; font-size:12px; opacity:.95}
     .cookie-text{font-size:13px; line-height:1.35; color:rgba(255,255,255,.92); max-width:720px}
     .cookie-text a{color:#fff; text-decoration:underline}
     .cookie-actions{display:flex; gap:10px}
@@ -240,75 +254,50 @@
 
     /* Smartphone */
     @media (max-width:900px){
-      nav[aria-label="Sezioni"]{display:none}
-      .hamburger{display:inline-flex; align-items:center; justify-content:center; justify-self:end}
-      .hamburger svg, .hamburger path{fill:#fff}
+      .app-banner{left:16px; right:16px; width:auto; padding:10px 12px; gap:10px; border-radius:16px}
+      .app-badge{width:48px; height:48px; flex:0 0 48px; border-radius:14px}
+      .app-kicker{font-size:9px; letter-spacing:.10em; margin:0 0 3px}
+      .app-title{font-size:12px}
+      .store-actions{gap:8px}
+      .store-btn{width:38px; padding:0; justify-content:center; gap:0; font-size:0; letter-spacing:0; border-radius:12px}
+      .store-btn svg{width:14px; height:14px}
+      .store-btn span{display:none}
 
-      /* Mobile menu: pannello 1/4 schermo + sfumatura (trasparente a metà) */
-      .mnav{
-        background:linear-gradient(270deg,
-          rgba(0,0,0,.78) 0%,
-          rgba(0,0,0,.55) 14%,
-          rgba(0,0,0,.28) 32%,
-          rgba(0,0,0,0) 50%,
-          rgba(0,0,0,0) 100%
-        );
-      }
-      .mnav .panel{
-        width:25vw;
-        min-width:100px;
-        max-width:180px;
-        background:linear-gradient(180deg, rgba(225,29,72,.62) 0%, rgba(0,0,0,.80) 55%, rgba(0,0,0,.42) 100%);
-        border-left:1px solid rgba(255,255,255,.14);
-        padding:18px 12px;
-        grid-template-rows:auto 1fr;
-        gap:14px;
-      }
+      /* Drawer più compatto su telefono */
+      .mnav .panel{min-width:100px; max-width:180px; padding:18px 12px}
       .mnav nav ul{gap:14px; justify-items:center; align-content:start}
-      .mnav nav a{color:#fff; text-transform:uppercase; letter-spacing:.12em; font-size:11px; font-weight:500; opacity:.92}
-      .mnav nav a:hover{opacity:1}
+      .mnav nav a{font-size:11px; font-weight:500}
 
-      .h-hero{height:100svh; min-height:420px}
-      .rooms{height:100svh; min-height:420px}
+      .h-hero{min-height:420px}
+      .rooms{min-height:420px}
 
-      /* Studio & Servizi: foto normale sopra (altezza reale) + pannello testo sotto, senza scroll interno */
-      #about, #services{display:block; height:auto; min-height:0}
-      #about .media, #services .media{position:relative; inset:auto; height:auto; min-height:0; background:#000}
-      #about .media img, #services .media img{position:relative; inset:auto; width:100%; height:auto; object-fit:contain}
+      /* Studio & Servizi: foto sopra + pannello testo sotto */
+      #about,#services{display:block; height:auto; min-height:0}
+      #about .media,#services .media{position:relative; inset:auto; height:auto; min-height:0}
+      #about .media img,#services .media img{position:relative; inset:auto; width:100%; height:auto; object-fit:contain}
+      #about .panel,#services .panel{position:relative; width:100%; height:auto; background:linear-gradient(180deg, rgba(225,29,72,.55) 0%, rgba(0,0,0,.86) 80%)}
+      #about .panel .inner,#services .panel .inner{padding:18px 18px 22px}
 
-      #about .panel, #services .panel{position:relative; left:auto; right:auto; top:auto; bottom:auto; width:100%; height:auto; overflow:visible;
-        background:linear-gradient(180deg, rgba(225,29,72,.55) 0%, rgba(0,0,0,.86) 80%)
-      }
-      #about .panel .inner, #services .panel .inner{padding:18px 18px 22px}
-
-      /* Studio: testo abbreviato su smartphone */
       #about .studio-long{display:none}
       #about .studio-short{display:block}
-      #about .studio-short p{margin-bottom:10px}
 
-      /* Servizi: su smartphone mostra solo titoli */
+      #services .service-list{list-style:none; padding:0; margin:10px 0 0}
       #services .service-list p{display:none}
-      #services .service-list li{margin-bottom:12px}
+      #services .service-list li{margin:0 0 12px; padding:0}
       #services .service-list h4{margin:10px 0 0}
 
-      /* Rooms label centered on mobile */
       .biglabel{inset:0; display:grid; place-items:center; text-align:center}
-      .biglabel span{display:block; width:100%; text-align:center; font-size:clamp(92px, 26vw, 200px)}
-      .biglabel .last{width:100%; text-align:center}
+      .biglabel > span{display:block; width:100%; text-align:center; font-size:clamp(92px, 26vw, 200px)}
 
-      /* Work: copertine ancora più compatte */
       #work .work-cover{width:72px; height:72px}
 
       .footer-grid{grid-template-columns:1fr}
-      footer::after{height:24px}
-
       .cookie-actions{width:100%; justify-content:flex-end}
     }
   </style>
 </head>
-<body id="top">
+<body>
 
-  <!-- ===== Header ===== -->
   <header>
     <div class="container nav">
       <a href="#home" class="brand" aria-label="Black Mood Studio – Home" title="Home">
@@ -326,14 +315,13 @@
       </nav>
 
       <button class="hamburger" aria-label="Apri menu" aria-controls="mobile-nav" aria-expanded="false">
-        <svg viewBox="0 0 24 24" aria-hidden="true" width="24" height="24"><path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"></path></svg>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"></path></svg>
       </button>
     </div>
 
-    <!-- Mobile Drawer -->
     <aside id="mobile-nav" class="mnav" hidden>
       <div class="panel" role="dialog" aria-modal="true" aria-label="Menu">
-<nav>
+        <nav>
           <ul>
             <li><a href="#about">Studio</a></li>
             <li><a href="#services">Servizi</a></li>
@@ -346,28 +334,52 @@
     </aside>
   </header>
 
-  <!-- ===== Home ===== -->
   <section id="home" class="hero static h-hero" aria-label="Home">
     <div class="media" aria-hidden="true">
       <img src="https://i.postimg.cc/1t1shRHb/24.jpg" alt="Black Mood Studio – Home" />
     </div>
+
+    <div class="app-banner" aria-label="Scarica l’app Black Mood Studio">
+      <div class="app-badge" aria-hidden="true">
+        <img src="https://i.postimg.cc/522nFVvV/Logo_app.png" alt="" loading="lazy" />
+      </div>
+      <div class="app-copy">
+        <p class="app-kicker">Scarica l’app</p>
+        <p class="app-title">Black Mood Studio</p>
+      </div>
+      <div class="store-actions" aria-label="Store links">
+        <!-- TODO: sostituisci gli href con i link reali di App Store e Google Play -->
+        <a class="store-btn" href="#" rel="nofollow noopener" aria-label="Apri App Store" title="App Store">
+          <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8.286 7.008c-3.216 0-4.286 3.23-4.286 5.92c0 3.229 2.143 8.072 4.286 8.072c1.165-.05 1.799-.538 3.214-.538c1.406 0 1.607.538 3.214.538s4.286-3.229 4.286-5.381c-.03-.011-2.649-.434-2.679-3.23c-.02-2.335 2.589-3.179 2.679-3.228c-1.096-1.606-3.162-2.113-3.75-2.153c-1.535-.12-3.032 1.077-3.75 1.077c-.729 0-2.036-1.077-3.214-1.077" />
+            <path d="M12 4a2 2 0 0 0 2-2a2 2 0 0 0-2 2" />
+          </svg>
+          <span>App Store</span>
+        </a>
+        <a class="store-btn" href="#" rel="nofollow noopener" aria-label="Apri Google Play" title="Google Play">
+          <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 3.71v16.58a.7.7 0 0 0 1.05.606l14.622-8.42a.55.55 0 0 0 0-.953l-14.622-8.419a.7.7 0 0 0-1.05.607Z" />
+            <path d="M15 9L4.5 20.5" />
+            <path d="M4.5 3.5L15 15" />
+          </svg>
+          <span>Play Store</span>
+        </a>
+      </div>
+    </div>
   </section>
 
-  <!-- ===== Studio ===== -->
-  <section id="about" class="static h-hero fit-cover vignette" aria-label="Lo Studio">
+  <section id="about" class="static h-hero vignette" aria-label="Lo Studio">
     <div class="media" aria-hidden="true">
       <img src="https://i.postimg.cc/j55jTx30/22.jpg" alt="Black Mood Studio – Lo Studio" />
     </div>
     <aside class="panel right" aria-label="Pannello descrizione studio">
       <div class="inner">
         <h3>Lo Studio</h3>
-
         <div class="studio-long">
           <p>Progettato per lavorare con precisione e continuità, Black Mood Studio integra una live room per riprese e prove, una regia per produzione e overdub e una sala dedicata a mix e mastering.</p>
           <p>Il trattamento acustico con pannelli Vicoustic assicura decisioni affidabili, mentre la connessione tra le sale consente sessioni multitraccia in tempo reale.</p>
           <p>Offriamo produzione, registrazione, editing, mix e mastering con consegna di master e versioni alternative pronte per le piattaforme digitali; disponibili anche stems e specifiche tecniche su richiesta. Le postazioni sono allestite con desk Zaor e sistemi di ascolto Focal per garantire coerenza e traduzione del lavoro.</p>
         </div>
-
         <div class="studio-short">
           <p>Tre ambienti connessi (live room, regia, mix &amp; mastering) per lavorare in modo continuo e preciso.</p>
           <p>Acustica Vicoustic, desk Zaor e ascolti Focal. Produzione, recording, editing, mix &amp; master con consegne pronte per lo streaming.</p>
@@ -376,8 +388,7 @@
     </aside>
   </section>
 
-  <!-- ===== Servizi ===== -->
-  <section id="services" class="static h-hero fit-cover vignette" aria-label="Servizi">
+  <section id="services" class="static h-hero vignette" aria-label="Servizi">
     <div class="media" aria-hidden="true">
       <img src="https://i.postimg.cc/y6DzLCHh/26-B-Flip.jpg" alt="Black Mood Studio – Servizi" />
     </div>
@@ -398,7 +409,6 @@
     </aside>
   </section>
 
-  <!-- ===== Sale ===== -->
   <section id="rooms" class="rooms" aria-label="Le Sale">
     <div class="slides" aria-live="polite">
       <figure class="slide is-active" data-title="STUDIO I"><img src="https://i.postimg.cc/pr70CnRX/IMG-6688.avif" alt="STUDIO I"/></figure>
@@ -406,22 +416,21 @@
       <figure class="slide" data-title="STUDIO R"><img src="https://i.postimg.cc/YSWmLGy7/16.jpg" alt="STUDIO R"/></figure>
     </div>
 
-    <div class="biglabel" aria-hidden="true"><span>STUDIO I</span></div>
+    <div class="biglabel" aria-hidden="true"><span>STUDIO<span class="last">I</span></span></div>
     <div class="caption">STUDIO I</div>
 
     <div class="controls" aria-label="Controlli carosello sale">
       <button class="btn prev" type="button" aria-label="Precedente">‹</button>
       <div class="dots" role="tablist">
-        <button class="dot is-active" role="tab" aria-label="Vai a STUDIO I"></button>
-        <button class="dot" role="tab" aria-label="Vai a STUDIO M"></button>
-        <button class="dot" role="tab" aria-label="Vai a STUDIO R"></button>
+        <button class="dot is-active" type="button" role="tab" aria-label="Vai a STUDIO I"></button>
+        <button class="dot" type="button" role="tab" aria-label="Vai a STUDIO M"></button>
+        <button class="dot" type="button" role="tab" aria-label="Vai a STUDIO R"></button>
       </div>
       <button class="btn next" type="button" aria-label="Successiva">›</button>
     </div>
   </section>
 
-  <!-- ===== Lavori ===== -->
-  <section id="work" class="static h-tall fit-contain vignette work" aria-label="Lavori">
+  <section id="work" class="static h-tall vignette work fit-contain" aria-label="Lavori">
     <div class="media" aria-hidden="true">
       <img id="work-img" src="https://i.postimg.cc/QMhTqtGW/Blackmood-89.jpg" data-mobile-src="https://i.postimg.cc/NFmdMppp/Blackmood-91.jpg" alt="Black Mood Studio – Lavori" />
     </div>
@@ -456,7 +465,6 @@
     </aside>
   </section>
 
-  <!-- ===== Footer ===== -->
   <footer id="contact" aria-label="Contatti">
     <div class="container footer-grid">
       <div>
@@ -524,7 +532,6 @@
     </div>
   </footer>
 
-  <!-- ===== Cookie Banner (stile pannelli) ===== -->
   <div id="cookie-banner" class="cookie-banner" hidden>
     <div class="cookie-card" role="dialog" aria-live="polite" aria-label="Preferenze cookie">
       <div class="cookie-row">
@@ -544,270 +551,187 @@
   </div>
 
   <script>
-    // Helpers
-    const $$ = (sel, ctx=document) => Array.from(ctx.querySelectorAll(sel));
-    const $  = (sel, ctx=document) => ctx.querySelector(sel);
-    const on = (el, ev, fn, opts) => el && el.addEventListener(ev, fn, opts);
-    const debounce = (fn, ms=140)=>{ let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), ms); }; };
+    const $ = (s, c=document) => c.querySelector(s);
+    const $$ = (s, c=document) => Array.from(c.querySelectorAll(s));
 
-    // Year
-    const y = $('#year'); if(y) y.textContent = new Date().getFullYear();
+    const y = document.getElementById('year');
+    if (y) y.textContent = new Date().getFullYear();
 
-    // ===== Consent Manager (default = nega tutto tranne necessari) =====
+    // Consent
     const CONSENT_KEY = 'bms_consent_v1';
-    const POLICY_URL  = 'https://sites.google.com/view/privacy-blackmoodstudio/home-page';
+    const getConsent = () => {
+      try { return JSON.parse(localStorage.getItem(CONSENT_KEY)); }
+      catch { return null; }
+    };
+    const setConsent = (c) => localStorage.setItem(CONSENT_KEY, JSON.stringify(c));
 
-    function getConsent(){
-      try{ return JSON.parse(localStorage.getItem(CONSENT_KEY)); }
-      catch{ return null; }
-    }
-    function setConsent(consent){
-      localStorage.setItem(CONSENT_KEY, JSON.stringify(consent));
-    }
-
-    function ensureCssLink(id, href){
-      if(document.getElementById(id)) return;
+    const ensureCss = (id, href) => {
+      if (document.getElementById(id)) return;
       const l = document.createElement('link');
       l.id = id; l.rel = 'stylesheet'; l.href = href;
       document.head.appendChild(l);
-    }
+    };
+    const loadFonts = () => {
+      ensureCss('gf-inter', 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+      ensureCss('gf-space', 'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+    };
 
-    function loadFonts(){
-      // Caricati SOLO dopo consenso Esperienza
-      ensureCssLink('gf-inter', 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-      ensureCssLink('gf-space', 'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
-      // Quando i font arrivano, lo stack già include fallback; qui non serve altro.
-    }
-
-    function loadSpotifyOembed(){
-      // Chiamate a terze parti SOLO dopo consenso Esperienza
-      const items = $$('#work .work-item');
-      items.forEach(item => {
-        if(item.dataset.oembedLoaded === '1') return;
+    const loadSpotifyOembed = () => {
+      $$('#work .work-item').forEach(item => {
+        if (item.dataset.oembedLoaded === '1') return;
         const cover = $('.work-cover', item);
         const trackUrl = item.getAttribute('data-spotify-url') || '';
-        if(!cover || !trackUrl) return;
+        if (!cover || !trackUrl) return;
 
         item.dataset.oembedLoaded = '1';
         fetch('https://open.spotify.com/oembed?url=' + encodeURIComponent(trackUrl))
           .then(r => r.ok ? r.json() : null)
           .then(data => {
-            if(!data) return;
-            if(data.thumbnail_url) cover.style.backgroundImage = `url("${data.thumbnail_url}")`;
-            if(data.title) cover.setAttribute('aria-label', data.title);
+            if (!data) return;
+            if (data.thumbnail_url) cover.style.backgroundImage = 'url(' + data.thumbnail_url + ')';
+            if (data.title) cover.setAttribute('aria-label', data.title);
           })
-          .catch(()=>{ item.dataset.oembedLoaded = '0'; });
+          .catch(() => { item.dataset.oembedLoaded = '0'; });
       });
-    }
+    };
 
-    function applyConsent(consent){
-      const experienceAllowed = !!consent?.experience;
-      document.body.classList.toggle('consent-experience', experienceAllowed);
+    const applyConsent = (c) => {
+      const exp = !!(c && c.experience);
+      document.body.classList.toggle('consent-experience', exp);
 
-      // 1) Spotify iframes: attiva solo se consentito
-      $$('iframe[data-src]').forEach((iframe) => {
-        if(experienceAllowed){
-          if(!iframe.src) iframe.src = iframe.dataset.src;
-        }else{
-          iframe.removeAttribute('src');
-        }
+      $$('iframe[data-src]').forEach(f => {
+        if (exp) { if (!f.src) f.src = f.dataset.src; }
+        else f.removeAttribute('src');
       });
 
-      // 2) oEmbed copertine (fetch) solo se consentito
-      if(experienceAllowed){
-        loadSpotifyOembed();
-        loadFonts();
-      }
-    }
+      if (exp) { loadFonts(); loadSpotifyOembed(); }
+    };
 
-    function showCookieBanner(){
-      const b = $('#cookie-banner');
-      if(b) b.hidden = false;
-    }
-    function hideCookieBanner(){
-      const b = $('#cookie-banner');
-      if(b) b.hidden = true;
-    }
+    const banner = document.getElementById('cookie-banner');
+    const showBanner = () => { if (banner) banner.hidden = false; };
+    const hideBanner = () => { if (banner) banner.hidden = true; };
 
-    function acceptAll(){
+    const acceptAll = () => {
       const c = { necessary:true, experience:true };
-      setConsent(c);
-      applyConsent(c);
-      hideCookieBanner();
-    }
-
-    function rejectAll(){
+      setConsent(c); applyConsent(c); hideBanner();
+    };
+    const rejectAll = () => {
       const c = { necessary:true, experience:false };
-      setConsent(c);
-      applyConsent(c);
-      hideCookieBanner();
-    }
+      setConsent(c); applyConsent(c); hideBanner();
+    };
 
-    // Init consent: default rifiuta finché l'utente non sceglie
     const stored = getConsent();
-    const initial = stored || { necessary:true, experience:false };
-    applyConsent(initial);
-    if(!stored) showCookieBanner();
+    applyConsent(stored || { necessary:true, experience:false });
+    if (!stored) showBanner();
 
-    // Banner buttons
+    const aBtn = document.querySelector('#cookie-banner [data-consent="accept"]');
+    const rBtn = document.querySelector('#cookie-banner [data-consent="reject"]');
+    if (aBtn) aBtn.addEventListener('click', acceptAll);
+    if (rBtn) rBtn.addEventListener('click', rejectAll);
+
+    const cs = document.getElementById('cookie-settings');
+    if (cs) cs.addEventListener('click', showBanner);
+
+    // Mobile menu
     (function(){
-      const banner = $('#cookie-banner');
-      if(!banner) return;
-      const acceptBtn = $('[data-consent="accept"]', banner);
-      const rejectBtn = $('[data-consent="reject"]', banner);
-      on(acceptBtn,'click', acceptAll);
-      on(rejectBtn,'click', rejectAll);
-    })();
+      const btn = document.querySelector('.hamburger');
+      const drawer = document.getElementById('mobile-nav');
+      if (!btn || !drawer) return;
 
-    // Footer: apri preferenze cookie
-    on($('#cookie-settings'), 'click', ()=> showCookieBanner());
+      const lock = () => (document.body.style.overflow = 'hidden');
+      const unlock = () => (document.body.style.overflow = '');
+      const open = () => { drawer.hidden = false; btn.setAttribute('aria-expanded','true'); lock(); };
+      const close = () => { drawer.hidden = true; btn.setAttribute('aria-expanded','false'); unlock(); };
 
-    // ===== Mobile menu (tap fuori, link, ESC) =====
-    (function(){
-      const btn = $('.hamburger');
-      const drawer = $('#mobile-nav');
-      if(!btn || !drawer) return;
+      btn.addEventListener('click', () => (drawer.hidden ? open() : close()));
+      drawer.addEventListener('click', (e) => { if (e.target === drawer) close(); });
 
-      const lockScroll = () => { document.body.style.overflow = 'hidden'; };
-      const unlockScroll = () => { document.body.style.overflow = ''; };
-
-      const open = () => {
-        drawer.hidden = false;
-        btn.setAttribute('aria-expanded','true');
-        lockScroll();
-      };
-      const close = () => {
-        drawer.hidden = true;
-        btn.setAttribute('aria-expanded','false');
-        unlockScroll();
-      };
-
-      // toggle sullo stesso pulsante
-      on(btn, 'click', ()=> (drawer.hidden ? open() : close()));
-      on(drawer, 'click', (e)=>{ if(e.target===drawer) close(); });
-
-      // Link del menu: chiudi e usa l'anchor nativa (super compatibile)
-      $$('.mnav a', drawer).forEach(a => on(a,'click', (e)=>{
+      $$('.mnav a', drawer).forEach(a => a.addEventListener('click', (e) => {
         const href = a.getAttribute('href') || '';
-        if(href.startsWith('#')){
-          e.preventDefault();
-          close();
-          // Cambia hash DOPO aver sbloccato lo scroll (altrimenti su alcuni browser non scorre)
-          setTimeout(()=>{ if(location.hash !== href) location.hash = href; }, 0);
-        }else{
-          close();
-        }
+        if (!href.startsWith('#')) return close();
+        e.preventDefault();
+        close();
+        setTimeout(() => {
+          const t = document.querySelector(href);
+          if (t) t.scrollIntoView({ behavior:'smooth', block:'start' });
+          history.replaceState(null, '', href);
+        }, 80);
       }));
 
-      on(document, 'keydown', (e)=>{ if(!drawer.hidden && e.key==='Escape') close(); });
+      document.addEventListener('keydown', (e) => { if (!drawer.hidden && e.key === 'Escape') close(); });
+
+      // Se si torna in desktop (nav visibile), chiudi sempre il drawer
+      const mq = window.matchMedia('(min-width:1101px)');
+      const onMq = () => { if (mq.matches) close(); };
+      if (mq.addEventListener) mq.addEventListener('change', onMq);
+      else mq.addListener(onMq);
+      onMq();
     })();
 
-    // ===== Lavori: click sulle copertine apre Spotify (azione dell'utente) =====
-    function setupWorkCoverClicks(){
-      $$('#work .work-item').forEach(item => {
-        if(item.dataset.coverInit === '1') return;
-        item.dataset.coverInit = '1';
-        const cover = $('.work-cover', item);
-        const trackUrl = item.getAttribute('data-spotify-url') || '';
-        if(!cover || !trackUrl) return;
-        on(cover, 'click', ()=> window.open(trackUrl, '_blank', 'noopener'));
-      });
-    }
-
-    // Work: swap mobile background
-    function syncWorkBackground(){
-      const img = $('#work-img');
-      if(!img) return;
-      img.dataset.desktopSrc ||= img.getAttribute('src') || '';
-      const vw = window.innerWidth || document.documentElement.clientWidth;
-      const mob = img.getAttribute('data-mobile-src') || '';
-      if(vw <= 900 && mob) img.src = mob;
-      if(vw > 900 && img.dataset.desktopSrc) img.src = img.dataset.desktopSrc;
-    }
-
-    // ===== Rooms carousel =====
-    function initRooms(){
-      const root = $('#rooms');
-      if(!root) return;
+    // Rooms carousel
+    (function(){
+      const root = document.getElementById('rooms');
+      if (!root) return;
       const slides = $$('.slide', root);
       const dots = $$('.dot', root);
-      const prevBtn = $('.prev', root);
-      const nextBtn = $('.next', root);
-      const caption = $('.caption', root);
-      const bigWrap = $('.biglabel', root);
-      const bigSpan = $('span', bigWrap);
+      const prev = root.querySelector('.prev');
+      const next = root.querySelector('.next');
+      const label = root.querySelector('.biglabel');
+      const cap = root.querySelector('.caption');
+      if (!slides.length) return;
 
-      const splitLast = (t='') => {
-        t = (t||'').toString().trim();
-        if(!t) return '';
-        const head = t.slice(0,-1).trim();
-        const last = t.slice(-1);
-        return `${head}<span class="last">${last}</span>`;
+      let i = 0;
+      const fmt = (t) => {
+        const p = (t || '').trim().split(/ +/);
+        if (p.length < 2) return '<span>' + (t || '') + '</span>';
+        const last = p.pop();
+        return '<span>' + p.join(' ') + '<span class="last">' + last + '</span></span>';
       };
 
-      let idx = 0;
-      let timer;
-      const AUTOPLAY = 5000;
-
-      const activate = (i) => {
-        if(!slides.length) return;
-        idx = (i + slides.length) % slides.length;
-        slides.forEach((s,j)=>{
-          const onSlide = j===idx;
-          s.classList.toggle('is-active', onSlide);
-          dots[j]?.classList.toggle('is-active', onSlide);
-        });
-        const title = slides[idx].getAttribute('data-title') || '';
-        if(caption) caption.textContent = title;
-        if(bigSpan){
-          bigSpan.innerHTML = splitLast(title);
-          bigWrap?.classList.toggle('is-black', title === 'STUDIO R');
-        }
+      const show = (n) => {
+        i = (n + slides.length) % slides.length;
+        slides.forEach((s, idx) => s.classList.toggle('is-active', idx === i));
+        dots.forEach((d, idx) => d.classList.toggle('is-active', idx === i));
+        const title = slides[i].dataset.title || '';
+        if (label) label.innerHTML = fmt(title);
+        if (cap) cap.textContent = title;
       };
 
-      const next = () => activate(idx+1);
-      const prev = () => activate(idx-1);
-      const stop = () => { if(timer) { clearInterval(timer); timer=null; } };
-      const start = () => { stop(); timer=setInterval(next, AUTOPLAY); };
+      let timer = null;
+      const restart = () => {
+        if (timer) clearInterval(timer);
+        timer = setInterval(() => show(i + 1), 5200);
+      };
 
-      on(prevBtn,'click', ()=>{ prev(); start(); });
-      on(nextBtn,'click', ()=>{ next(); start(); });
-      dots.forEach((d,j)=> on(d,'click', ()=>{ activate(j); start(); }));
+      dots.forEach((d, idx) => d.addEventListener('click', () => { show(idx); restart(); }));
+      if (prev) prev.addEventListener('click', () => { show(i - 1); restart(); });
+      if (next) next.addEventListener('click', () => { show(i + 1); restart(); });
 
-      // swipe
-      let sx=0;
-      on(root,'touchstart', (e)=>{ sx=e.changedTouches[0].clientX; }, {passive:true});
-      on(root,'touchend', (e)=>{
-        const dx = e.changedTouches[0].clientX;
-        if(Math.abs(dx-sx)>40){ (dx<sx?next:prev)(); start(); }
-      }, {passive:true});
+      show(0);
+      restart();
+    })();
 
-      activate(0);
-      setTimeout(start, 600);
-    }
+    // Work: click covers open Spotify
+    $$('#work .work-item').forEach(item => {
+      const cover = $('.work-cover', item);
+      const url = item.getAttribute('data-spotify-url') || '';
+      if (!cover || !url) return;
+      cover.addEventListener('click', () => window.open(url, '_blank', 'noopener'));
+    });
 
-    // ===== Init =====
-    setupWorkCoverClicks();
-    syncWorkBackground();
-    initRooms();
-
-    window.addEventListener('resize', debounce(()=>{
-      syncWorkBackground();
-      // se l'utente ha già dato consenso, su resize ricarichiamo oembed se serve
-      const c = getConsent();
-      if(c?.experience) loadSpotifyOembed();
-    }));
-
-    // Sanity checks (non bloccanti)
+    // Work background mobile/desktop
     (function(){
-      try{
-        console.groupCollapsed('[DEBUG] Sanity checks');
-        console.assert(!!document.querySelector('#rooms .slides'), 'Rooms: slides presenti');
-        console.assert(!!document.querySelector('#services .media img'), 'Services: immagine presente');
-        console.assert(($$('iframe[data-src]').length===3), 'Work: 3 iframe data-src');
-        console.assert(!!document.querySelector('header nav ul'), 'Header: nav OK');
-        console.groupEnd();
-      }catch(e){}
+      const img = document.getElementById('work-img');
+      if (!img) return;
+      const desk = img.getAttribute('src') || '';
+      const mob = img.dataset.mobileSrc || '';
+      const sync = () => {
+        const isMobile = window.matchMedia('(max-width:900px)').matches;
+        img.src = (isMobile && mob) ? mob : desk;
+      };
+      sync();
+      let raf = 0;
+      window.addEventListener('resize', () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(sync); });
     })();
   </script>
 </body>
